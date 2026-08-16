@@ -39,6 +39,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+import com.example.utils.HardwareCompatibilityChecker
+
 enum class MainTab {
     DASHBOARD,
     EMV_READER,
@@ -58,7 +60,7 @@ class NfcViewModel(application: Application) : AndroidViewModel(application) {
     private val _isWriteMode = MutableStateFlow(false)
     val isWriteMode: StateFlow<Boolean> = _isWriteMode.asStateFlow()
 
-    private val _hardwareInfo = MutableStateFlow(checkHardware(application))
+    private val _hardwareInfo = MutableStateFlow(HardwareCompatibilityChecker.checkNfcSupport(application))
     val hardwareInfo: StateFlow<NfcHardwareInfo> = _hardwareInfo.asStateFlow()
 
     private val _scannedEmvCard = MutableStateFlow<EmvCardDetails?>(null)
@@ -114,7 +116,7 @@ class NfcViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun refreshHardwareStatus() {
-        _hardwareInfo.value = checkHardware(getApplication())
+        _hardwareInfo.value = HardwareCompatibilityChecker.checkNfcSupport(getApplication())
     }
 
     fun toggleMaskPan() {
@@ -312,34 +314,5 @@ class NfcViewModel(application: Application) : AndroidViewModel(application) {
                 v?.vibrate(80)
             }
         } catch (_: Exception) {}
-    }
-
-    companion object {
-        fun checkHardware(context: Context): NfcHardwareInfo {
-            val nfcAdapter = NfcAdapter.getDefaultAdapter(context)
-            val hasNfc = nfcAdapter != null
-            val isEnabled = nfcAdapter?.isEnabled == true
-            val hasHce = context.packageManager.hasSystemFeature(PackageManager.FEATURE_NFC_HOST_CARD_EMULATION)
-            val hasBeam = context.packageManager.hasSystemFeature(PackageManager.FEATURE_NFC)
-
-            val techSummary = mutableListOf<String>()
-            if (hasNfc) {
-                techSummary.add("ISO 14443 Type A (NFC-A)")
-                techSummary.add("ISO 14443 Type B (NFC-B)")
-                techSummary.add("ISO 18092 / FeliCa (NFC-F)")
-                techSummary.add("ISO 15693 / Vicinity (NFC-V)")
-                techSummary.add("ISO 7816-4 ISO-DEP (Smart / Banking Cards)")
-                techSummary.add("NFC Forum Type 1-5 Tags")
-                if (hasHce) techSummary.add("Host-based Card Emulation (HCE)")
-            }
-
-            return NfcHardwareInfo(
-                hasNfc = hasNfc,
-                isEnabled = isEnabled,
-                hasHce = hasHce,
-                hasBeam = hasBeam,
-                supportedTechSummary = techSummary
-            )
-        }
     }
 }

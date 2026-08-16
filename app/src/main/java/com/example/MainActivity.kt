@@ -303,7 +303,7 @@ fun MainAppScreen(viewModel: NfcViewModel) {
                 .padding(innerPadding)
         ) {
             // NFC status notification banner
-            if (activeTab != MainTab.DIAGNOSIS) {
+            if (activeTab != MainTab.DIAGNOSIS && activeTab != MainTab.DASHBOARD) {
                 NfcStatusBanner(
                     hardwareInfo = hardwareInfo,
                     onRefresh = { viewModel.refreshHardwareStatus() }
@@ -319,6 +319,8 @@ fun MainAppScreen(viewModel: NfcViewModel) {
                 when (tab) {
                     MainTab.DASHBOARD -> {
                         DashboardScreen(
+                            hardwareInfo = hardwareInfo,
+                            onRefreshHardware = { viewModel.refreshHardwareStatus() },
                             isWriteMode = isWriteMode,
                             onToggleWriteMode = { viewModel.toggleWriteMode(it) },
                             tagDetails = tagDetails,

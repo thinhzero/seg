@@ -13,12 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.data.model.NfcHardwareInfo
 import com.example.data.model.NfcTagDetails
 import com.example.data.model.WritePayload
 import com.example.data.model.WriteState
+import com.example.ui.components.NfcStatusBanner
 
 @Composable
 fun DashboardScreen(
+    hardwareInfo: NfcHardwareInfo,
+    onRefreshHardware: () -> Unit,
     isWriteMode: Boolean,
     onToggleWriteMode: (Boolean) -> Unit,
     // Read state
@@ -32,6 +36,12 @@ fun DashboardScreen(
     onCancelWrite: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
+        // Explicitly show Hardware status on Dashboard
+        NfcStatusBanner(
+            hardwareInfo = hardwareInfo,
+            onRefresh = onRefreshHardware
+        )
+
         // Mode Toggle
         SingleChoiceSegmentedButtonRow(
             modifier = Modifier
