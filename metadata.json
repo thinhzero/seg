@@ -1,0 +1,7 @@
+{
+  "name": "NFC Manager",
+  "description": "Powerful NFC tag reader & writer with contactless EMV banking card scanner, APDU terminal, and hardware compatibility checker.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
