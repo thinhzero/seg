@@ -1,0 +1,22 @@
+# Android
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+app/build/
+app/src/main/jniLibs/
+
+# Rust
+rust/target/
+rust/Cargo.lock
+
+# IDE
+.vscode/
+*.swp
+*.swo
